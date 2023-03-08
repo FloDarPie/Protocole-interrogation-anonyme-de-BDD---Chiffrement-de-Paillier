@@ -1,27 +1,26 @@
 #ifndef PAILLIER_GMP_H
 #define PAILLIER_GMP_H
 
+#include <stdbool.h>
 #include <gmp.h>
+#include <time.h>
 
+
+//Memorisation des cles
 typedef struct {
-    mpz_t n; // modulo
-    mpz_t g; // générateur
-    mpz_t lambda; // facteur d'extension
+    mpz_t n; 
+    mpz_t g; 
 } paillier_pubkey;
 
 typedef struct {
-    mpz_t p; // premier
-    mpz_t q; // deuxième
-    mpz_t n; // modulo
-    mpz_t nsquare; // n^2
-    mpz_t lambda; // facteur d'extension
-    mpz_t mu; // coefficient de décryptage
+    mpz_t lambda;
+    mpz_t mu; 
 } paillier_privkey;
 
-void paillier_keygen(paillier_pubkey *pub, paillier_privkey *priv, int keysize);
 
-void paillier_encrypt(mpz_t ct, mpz_t m, paillier_pubkey pub);
 
-void paillier_decrypt(mpz_t m, mpz_t ct, paillier_privkey priv, paillier_pubkey pub);
+void generer_parametre(mpz_t n, mpz_t g, mpz_t lambda, bool test);
+
+void generer_cle(paillier_pubkey *pubkey, paillier_privkey *privkey, mpz_t n, mpz_t g, mpz_t lambda, mpz_t mu);
 
 #endif
