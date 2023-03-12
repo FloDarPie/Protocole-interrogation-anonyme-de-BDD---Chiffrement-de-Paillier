@@ -29,14 +29,14 @@ int main()
     gmp_printf("---------\nCle publique {\nn      : %Zd\ng      : %Zd }\n=========", pubkey.n, pubkey.g);
     gmp_printf("\nCle prive {\nlambda : %Zd\nmu     : %Zd }\n---------\n", privkey.lambda, privkey.mu);
 
-    printf("/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/\n");
+    printf("/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/\n"); //suppr
 
     //utilisation des cles.
     mpz_t m_clair, m_chiffre;
     mpz_init(m_clair);
     mpz_init(m_chiffre);
 
-    printf("---------ok debut\n");
+    printf("---------ok debut\n"); //suppr
     mpz_set_ui(m_clair, 42);
     chiffrer(&pubkey, m_clair, m_chiffre, test);
     gmp_printf("\nMessage clair   : %Zd", m_clair);
