@@ -10,10 +10,7 @@ int main()
     bool test = true;
     
     // Initialisation des variables GMP
-    mpz_init(n);
-    mpz_init(g);
-    mpz_init(lambda);
-    mpz_init(mu);
+    mpz_inits(n, g, lambda, mu, NULL);
 
     // Initialisation des cles
     paillier_pubkey pubkey;
@@ -32,14 +29,22 @@ int main()
     gmp_printf("---------\nCle publique {\nn      : %Zd\ng      : %Zd }\n=========", pubkey.n, pubkey.g);
     gmp_printf("\nCle prive {\nlambda : %Zd\nmu     : %Zd }\n---------\n", privkey.lambda, privkey.mu);
 
+    printf("/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/\n");
 
+    //utilisation des cles.
+    mpz_t m_clair, m_chiffre;
+    mpz_init(m_clair);
+    mpz_init(m_chiffre);
+
+    printf("---------ok debut\n");
+    mpz_set_ui(m_clair, 42);
+    chiffrer(&pubkey, m_clair, m_chiffre, test);
+    gmp_printf("\nMessage clair   : %Zd", m_clair);
+    gmp_printf("\nMessage chiffre : %Zd", m_chiffre);
 
 
     // Libération de la mémoire utilisée par les variables GMP
-    mpz_clear(n);
-    mpz_clear(g);
-    mpz_clear(lambda);
-    mpz_clear(mu);
+    mpz_clears(n, g, lambda, mu, m_clair, m_chiffre);
     
     return 0;
 }

@@ -2,6 +2,7 @@
 #define PAILLIER_GMP_H
 
 #include <stdbool.h>
+#include <stdio.h>
 #include <gmp.h>
 #include <time.h>
 
@@ -22,5 +23,7 @@ typedef struct {
 void generer_parametre(mpz_t n, mpz_t g, mpz_t lambda, bool test);
 
 void generer_cle(paillier_pubkey *pubkey, paillier_privkey *privkey, mpz_t n, mpz_t g, mpz_t lambda, mpz_t mu);
+
+void chiffrer(paillier_pubkey *pubkey, mpz_t message_clair, mpz_t message_chiffre, bool test);
 
 #endif
