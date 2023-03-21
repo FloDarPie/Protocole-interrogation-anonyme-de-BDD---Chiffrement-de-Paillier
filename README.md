@@ -20,6 +20,5 @@ This is how it's implemented :
    a. Soit c le chiffré à déchiffrer
    b. Calculer le déchiffré m = (c^(lambda) mod n^2 - 1) / n * mu mod n
 
- -- inv(a,n) désigne l'inverse modulaire de 'a' modulo 'n'
 
 Source : https://www.sciencedirect.com/topics/computer-science/paillier-cryptosystem (pour les images)

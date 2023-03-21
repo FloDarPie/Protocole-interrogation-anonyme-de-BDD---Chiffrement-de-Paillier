@@ -19,10 +19,6 @@ int main()
     // Génération des paramètres du cryptosystème de Paillier
     generer_parametre(n, g, lambda, test);
 
-    gmp_printf("n = %Zd\n", n);
-    gmp_printf("g = %Zd\n", g);
-
-
     //Generation des cles
     generer_cle(&pubkey, &privkey, n, g, lambda, mu);
 
@@ -31,16 +27,17 @@ int main()
 
     printf("/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/\n"); //suppr
 
-    //utilisation des cles.
+    //Utilisation des cles.
     mpz_t m_clair, m_chiffre;
     mpz_init(m_clair);
     mpz_init(m_chiffre);
 
-    printf("---------ok debut\n"); //suppr
     mpz_set_ui(m_clair, 42);
     chiffrer(&pubkey, m_clair, m_chiffre, test);
+
+    
     gmp_printf("\nMessage clair   : %Zd", m_clair);
-    gmp_printf("\nMessage chiffre : %Zd", m_chiffre);
+    gmp_printf("\nMessage chiffre : %Zd\n", m_chiffre);
 
 
     // Libération de la mémoire utilisée par les variables GMP

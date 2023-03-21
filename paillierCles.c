@@ -7,8 +7,6 @@ void generer_cle(paillier_pubkey *pubkey, paillier_privkey *privkey, mpz_t n, mp
     mpz_inits(pubkey->n, pubkey->g, NULL);
     mpz_inits(privkey->lambda, privkey->mu, NULL);
 
-
-
     //on trouve aussi : mu = ([
     //                          [g^lambda modulo n^2]
     //                        -1 ] / n )^-1 mod n
