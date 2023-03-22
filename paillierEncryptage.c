@@ -25,7 +25,6 @@ void chiffrer(paillier_pubkey *pubkey, mpz_t message_clair, mpz_t message_chiffr
 
     // Choisir un nombre aléatoire r ∈ Zn*
     mpz_urandomb(r, graine, mpz_sizeinbase(pubkey->n, 10));
-    gmp_printf("\ntest1 %Zd", r); //suppr
 
     
     //Calculer le chiffré c = (g * m) * r^n mod n^2

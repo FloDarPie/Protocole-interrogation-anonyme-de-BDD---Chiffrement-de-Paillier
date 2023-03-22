@@ -26,4 +26,6 @@ void generer_cle(paillier_pubkey *pubkey, paillier_privkey *privkey, mpz_t n, mp
 
 void chiffrer(paillier_pubkey *pubkey, mpz_t message_clair, mpz_t message_chiffre, bool test);
 
+void dechiffrer(paillier_pubkey *pubkey, paillier_privkey *privkey, mpz_t message_chiffre, mpz_t message_dechiffre);
+
 #endif

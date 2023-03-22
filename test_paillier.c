@@ -1,7 +1,9 @@
 
 #include "paillier.h"
 
-// gcc paillierParametre.c paillierCles.c test_paillier.c -o test -lgmp
+// gcc paillierDecryptage.c paillierEncryptage.c paillierParametre.c paillierCles.c test_paillier.c -o test -lgmp
+
+
 
 
 int main()
@@ -40,8 +42,17 @@ int main()
     gmp_printf("\nMessage chiffre : %Zd\n", m_chiffre);
 
 
+    printf("/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/\n"); //suppr
+
+    //dechiffré
+    mpz_t m_dechiffre;
+    mpz_init(m_dechiffre);
+    dechiffrer(&pubkey, &privkey, m_chiffre, m_dechiffre);
+    gmp_printf("\nMessage dechiffre : %Zd\n", m_dechiffre);
+
     // Libération de la mémoire utilisée par les variables GMP
     mpz_clears(n, g, lambda, mu, m_clair, m_chiffre);
+    mpz_clear(m_dechiffre);
     
     return 0;
 }
