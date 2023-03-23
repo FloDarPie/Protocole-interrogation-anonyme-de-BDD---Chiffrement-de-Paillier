@@ -20,6 +20,15 @@ Voici le protocole d'implémentation :
    a. Soit c le chiffré à déchiffrer
    b. Calculer le déchiffré m = (c^(lambda) mod n^2 - 1) / n * mu mod n
 
+Objectifs :
+
+Construire un tableau très grand.
+Établir une communication entre un client et un serveur.
+Communication chiffré.
+Il faut pouvoir effectuer une requête sans que le serveur puisse l'identifier.
+
+m_clair => m_chiffré ==========> 
+   CLIENT                           SERVEUR
 
 Source : 
  - https://www.sciencedirect.com/topics/computer-science/paillier-cryptosystem (pour les images)
