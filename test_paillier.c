@@ -35,6 +35,7 @@ int main()
     mpz_init(m_chiffre);
 
     mpz_set_ui(m_clair, 42);
+    mpz_set_ui(m_clair,195947168573380514);
     chiffrer(&pubkey, m_clair, m_chiffre, test);
 
     
