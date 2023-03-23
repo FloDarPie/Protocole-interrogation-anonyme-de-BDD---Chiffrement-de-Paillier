@@ -16,7 +16,7 @@ This is how it's implemented :
    b. Choisir un nombre aléatoire r ∈ Zn*
    c. Calculer le chiffré c = (g * m) * r^n mod n^2         // c'est g^m à la base
 
-3. Déchiffrement
+3. Déchiffrementgcc paillierDecryptage.c paillierEncryptage.c paillierParametre.c paillierCles.c test_paillier.c -o test -lgmp
    a. Soit c le chiffré à déchiffrer
    b. Calculer le déchiffré m = (c^(lambda) mod n^2 - 1) / n * mu mod n
 
