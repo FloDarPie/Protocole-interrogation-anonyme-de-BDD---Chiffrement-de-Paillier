@@ -2,7 +2,7 @@
 For the TER in M1 Cryptography Bordeaux.
 
 
-This is how it's implemented :
+Voici le protocole d'implémentation :
 
 1. Génération des clés
    a. Choisir deux nombres premiers p et q de taille égale
@@ -16,9 +16,12 @@ This is how it's implemented :
    b. Choisir un nombre aléatoire r ∈ Zn*
    c. Calculer le chiffré c = (g * m) * r^n mod n^2         // c'est g^m à la base
 
-3. Déchiffrementgcc paillierDecryptage.c paillierEncryptage.c paillierParametre.c paillierCles.c test_paillier.c -o test -lgmp
+3. Déchiffrement
    a. Soit c le chiffré à déchiffrer
    b. Calculer le déchiffré m = (c^(lambda) mod n^2 - 1) / n * mu mod n
 
 
-Source : https://www.sciencedirect.com/topics/computer-science/paillier-cryptosystem (pour les images)
+Source : 
+ - https://www.sciencedirect.com/topics/computer-science/paillier-cryptosystem (pour les images)
+
+ - https://www.theses.fr/2017GREAT092.pdf

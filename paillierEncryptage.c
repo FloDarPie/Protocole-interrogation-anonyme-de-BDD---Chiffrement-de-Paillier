@@ -29,6 +29,7 @@ void chiffrer(paillier_pubkey *pubkey, mpz_t message_clair, mpz_t message_chiffr
     
     //Calculer le chiffré c = (g * m) * r^n mod n^2
     mpz_mul(tmp, pubkey->g, message_clair);
+    
     mpz_mul(n2, pubkey->n,pubkey->n);
     mpz_powm(rn, r, pubkey->n, n2);
     mpz_mul(tmp, tmp, rn);

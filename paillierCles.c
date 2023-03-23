@@ -35,12 +35,12 @@ void generer_cle(paillier_pubkey *pubkey, paillier_privkey *privkey, mpz_t n, mp
     //Même résultat qu'avec
     //mu = lambda^-1 mod n
     mpz_invert(mu, lambda, n);
-    mpz_mod(mu, mu, n);
     
 
     // Stockage des clés publiques et privées
     mpz_set(pubkey->n, n);
     mpz_set(pubkey->g, g);
+    
     mpz_set(privkey->lambda, lambda);
     mpz_set(privkey->mu, mu);
 
