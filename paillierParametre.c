@@ -1,6 +1,6 @@
 #include "paillier.h"
 
-void generer_parametre(mpz_t n, mpz_t g, mpz_t lambda, bool test)
+void generer_parametre(mpz_t n, mpz_t n2, mpz_t lambda, unsigned long int seed)
 {
     gmp_randstate_t state;
     mpz_t p, q, phi, tmp;
@@ -12,15 +12,12 @@ void generer_parametre(mpz_t n, mpz_t g, mpz_t lambda, bool test)
     mpz_init(phi);
     mpz_init(tmp);
     
-    // Initialisation de l'état aléatoire --- option, avec l'horloge
     gmp_randinit_default(state);
-    //=================================
-    if (!test)
+    if(seed != 1)
     {
-    unsigned long seed = time(NULL); // utilise l'horloge système comme graine
-    gmp_randseed_ui(state, seed);
+        gmp_randseed_ui(state, seed);
     }
-    //=====================
+    
     
     // Génération de deux nombres premiers aléatoires de 1024 bits
     mpz_urandomb(p, state, 1024);    mpz_nextprime(p, p);
@@ -34,8 +31,8 @@ void generer_parametre(mpz_t n, mpz_t g, mpz_t lambda, bool test)
     mpz_sub_ui(phi, q, 1);
     mpz_lcm(lambda, tmp, phi);  //calcul du ppcm
 
-    //affectation de g = n+1
-    mpz_add_ui(g, n, 1);
+    //affectation de n2 = n * n
+    mpz_mul(n2, n, n);
 
     
     // Libération de la mémoire utilisée par les variables GMP

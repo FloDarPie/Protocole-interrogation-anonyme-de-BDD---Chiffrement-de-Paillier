@@ -1,12 +1,48 @@
 #include "communication.h"
 
 
-// tableau, enorme, remplie de 42, sauf en case 20482048 ou ya un 1.
+void genererTab(mpz_t *tableau, int dim)
+{
 
-void genererTab(mpz_t *tableau, int dim, int caseSpe, int valSpe){
+    tableau = (mpz_t *)malloc(dim * sizeof(mpz_t));
+    for (int i; i < dim; i++)
+    {
+        mpz_set_ui(tableau[i], i);
+    }
+}
 
-    //tableau = (mpz_t *)calloc(dim * sizeof(mpz_t));
-    //mpz_set_ui(tableau[caseSpe], valSpe);
+void tabrequete(mpz_t *tab, int dim, int cell)
+{
+    tab = (mpz_t *)malloc(dim * sizeof(mpz_t));
+    for (int i; i < dim; i++)
+    {
+        if (i == cell)
+        {
+            mpz_set_ui(tab[i], 1);
+        }
+        else
+        {
+            mpz_set_ui(tab[i], 0);
+        }
+    }
+}
+void requetechiff(mpz_t *tab, int dim, paillier_pubkey *pubkey)
+{
+    for (int i; i < dim; i++)
+    {
+        chiffrer(pubkey, tab[i], tab[i]);
+    }
+}
+
+void prodreqtab(mpz_t *bd, mpz_t *req ,mpz_t *chiff, mpz_t n, int dim )
+{   mpz_t tmp;
+    mpz_init(tmp);
+    mpz_set_ui(*chiff,1);
+    for (int i; i < dim; i++)
+    {   mpz_powm(tmp, req[i], bd[i], n);
+
+        mpz_mul(*chiff, tmp, *chiff);
+    }
 }
 
 

@@ -1,10 +1,10 @@
 #include "paillier.h"
 
 // Génère les clés de cryptage en utilisant les entiers n et g
-void generer_cle(paillier_pubkey *pubkey, paillier_privkey *privkey, mpz_t n, mpz_t g, mpz_t lambda, mpz_t mu) {
+void generer_cle(paillier_pubkey *pubkey, paillier_privkey *privkey, mpz_t n, mpz_t n2, mpz_t lambda, mpz_t mu, unsigned long int seed) {
     
     //on initialise les cles
-    mpz_inits(pubkey->n, pubkey->g, NULL);
+    mpz_inits(pubkey->n, pubkey->n2, NULL);
     mpz_inits(privkey->lambda, privkey->mu, NULL);
 
     //on trouve aussi : mu = ([
@@ -36,10 +36,11 @@ void generer_cle(paillier_pubkey *pubkey, paillier_privkey *privkey, mpz_t n, mp
     //mu = lambda^-1 mod n
     mpz_invert(mu, lambda, n);
     
-
+    
     // Stockage des clés publiques et privées
     mpz_set(pubkey->n, n);
-    mpz_set(pubkey->g, g);
+    mpz_set(pubkey->n2, n2);
+    pubkey->seed = seed;
     
     mpz_set(privkey->lambda, lambda);
     mpz_set(privkey->mu, mu);
