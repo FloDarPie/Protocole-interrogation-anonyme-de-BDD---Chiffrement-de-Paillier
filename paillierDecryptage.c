@@ -14,7 +14,6 @@ void dechiffrer(paillier_pubkey *pubkey, paillier_privkey *privkey, mpz_t messag
     //tmp = (c^(lambda) mod n^2 - 1)
     mpz_mul(n2, pubkey->n,pubkey->n);
     mpz_powm(tmp, message_chiffre, privkey->lambda, n2);
-    mpz_mod(tmp,tmp,n2);
     mpz_sub_ui(tmp, tmp, 1);
 
     //m = tmp / n * mu mod n

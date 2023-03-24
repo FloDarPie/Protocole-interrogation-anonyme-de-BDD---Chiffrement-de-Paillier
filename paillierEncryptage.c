@@ -27,8 +27,9 @@ void chiffrer(paillier_pubkey *pubkey, mpz_t message_clair, mpz_t message_chiffr
     mpz_urandomb(r, graine, mpz_sizeinbase(pubkey->n, 10));
 
     
-    //Calculer le chiffré c = (g * m) * r^n mod n^2
-    mpz_mul(tmp, pubkey->g, message_clair);
+    //Calculer le chiffré c = (1 + n * m) * r^n mod n^2
+    mpz_mul(tmp, pubkey->n, message_clair);
+    mpz_add_ui(tmp,tmp,1);
     
     mpz_mul(n2, pubkey->n,pubkey->n);
     mpz_powm(rn, r, pubkey->n, n2);

@@ -5,8 +5,8 @@
 
 void genererTab(mpz_t *tableau, int dim, int caseSpe, int valSpe){
 
-    tableau = (mpz_t *)calloc(dim * sizeof(mpz_t));
-    mpz_set_ui(tableau[caseSpe], valSpe);
+    //tableau = (mpz_t *)calloc(dim * sizeof(mpz_t));
+    //mpz_set_ui(tableau[caseSpe], valSpe);
 }
 
 

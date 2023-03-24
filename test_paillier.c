@@ -50,6 +50,19 @@ int main()
     dechiffrer(&pubkey, &privkey, m_chiffre, m_dechiffre);
     gmp_printf("\nMessage dechiffre : %Zd\n", m_dechiffre);
 
+
+    mpz_set_ui(m_clair, 0);
+    chiffrer(&pubkey, m_clair, m_chiffre, test);
+    printf("/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/\n"); //suppr
+    gmp_printf("\nMessage clair   : %Zd", m_clair);
+    gmp_printf("\nMessage chiffre : %Zd\n", m_chiffre);
+
+    mpz_set_ui(m_clair, 1);
+    chiffrer(&pubkey, m_clair, m_chiffre, test);
+    printf("/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/\n"); //suppr
+    gmp_printf("\nMessage clair   : %Zd", m_clair);
+    gmp_printf("\nMessage chiffre : %Zd\n", m_chiffre);
+
     // Libération de la mémoire utilisée par les variables GMP
     mpz_clear(n);
     mpz_clear(g);

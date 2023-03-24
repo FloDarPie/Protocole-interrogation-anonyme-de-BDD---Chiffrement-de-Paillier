@@ -30,6 +30,12 @@ Il faut pouvoir effectuer une requête sans que le serveur puisse l'identifier.
 m_clair => m_chiffré ==========> 
    CLIENT                           SERVEUR
 
+
+
+stocké n2 plutôt que g dans la clé publique
+
+
+
 Source : 
  - https://www.sciencedirect.com/topics/computer-science/paillier-cryptosystem (pour les images)
 
