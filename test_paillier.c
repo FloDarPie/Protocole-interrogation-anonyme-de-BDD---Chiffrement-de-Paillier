@@ -1,4 +1,3 @@
-
 #include "paillier.h"
 
 // gcc paillierDecryptage.c paillierEncryptage.c paillierParametre.c paillierCles.c test_paillier.c -o test -lgmp
@@ -7,7 +6,7 @@
 int main()
 {
     mpz_t n, n2, lambda, mu;
-    bool test = true;
+    bool test = false;
     
     // Initialisation des variables GMP
     mpz_inits(n, n2, lambda, mu, NULL);
@@ -20,8 +19,10 @@ int main()
 
     if (!test)
     {
-        seed = time(NULL); // utilise l'horloge système comme graine
+        srand(time(NULL));
+        seed = rand(); // utilise l'horloge système comme graine
     }
+
 
     // Génération des paramètres du cryptosystème de Paillier
     generer_parametre(n, n2, lambda, seed);
@@ -55,7 +56,7 @@ int main()
     mpz_t m_dechiffre;
     mpz_init(m_dechiffre);
     dechiffrer(&pubkey, &privkey, m_chiffre, m_dechiffre);
-    gmp_printf("\nMessage dechiffre : %Zd\n", m_dechiffre);
+    gmp_printf("\nMessage dechiffre : %Zd\n\n\n", m_dechiffre);
 
 
     mpz_set_ui(m_clair, 0);
@@ -70,6 +71,7 @@ int main()
     gmp_printf("\nMessage clair   : %Zd", m_clair);
     gmp_printf("\nMessage chiffre : %Zd\n", m_chiffre);
 
+    
     // Libération de la mémoire utilisée par les variables GMP
     mpz_clear(n);
     mpz_clear(n2);

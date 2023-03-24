@@ -12,6 +12,7 @@ void chiffrer(paillier_pubkey *pubkey, mpz_t message_clair, mpz_t message_chiffr
     mpz_init(tmp);
     mpz_init(rn);
 
+    gmp_randinit_default(graine);
     if(pubkey->seed != 1)
     {
         gmp_randseed_ui(graine, pubkey->seed);
