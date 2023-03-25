@@ -1,18 +1,19 @@
 ___
 # <center> Chiffrement de Pailler 
-#### <center> *Protocole d’interrogation anonyme de base de données*
+## <center> *Protocole d’interrogation anonyme de base de données*
 ### <center> TER 2023
+___
+##### <center> Duzes Florian - Negrier Adryan
 
 <br>
 <br>
-<p align="justify"> D’ordinaire, pour récupérer un champ d’une base de données, un client envoie une requête indiquant quel élément l’intéresse, puis la base lui renvoie cet élément. Quel élément a été consulté est une information que le client peut ne pas souhaiter divulguer y compris au serveur de base de données.
+<justify> D’ordinaire, pour récupérer un champ d’une base de données, un client envoie une requête indiquant quel élément l’intéresse, puis la base lui renvoie cet élément. Quel élément a été consulté est une information que le client peut ne pas souhaiter divulguer y compris au serveur de base de données.
 Pour protéger l’anonymat de la requête, des protocoles, appelés protocoles PIR (Private Information Retrieval) ont été proposés. Il s’agira d’étudier et de mettre en œuvre une construction de protocole PIR utilisant des systèmes de chiffrement dits homomorphes additifs, comme le système de Paillier.
 <br>
 <br>
 <br>
 
-<p align="justify"> 
-Le cryptosystème de Paillier a été créé en 1999 par Pascal Paillier. Il s'agit également d'un chiffrement asymétrique. Il est homomorphe pour l'addition, c'est pourquoi il peut être utilisé dans le cadre du vote électronique. 
+<justify> Le cryptosystème de Paillier a été créé en 1999 par Pascal Paillier. Il s'agit également d'un chiffrement asymétrique. Il est homomorphe pour l'addition, c'est pourquoi il peut être utilisé dans le cadre du vote électronique.
 <br>
 Un cryptosystème est un terme utilisé en cryptographie pour désigner un ensemble composé d'algorithmes cryptographiques et de tous les textes en clair, textes chiffrés et clés possibles (définition de Bruce Schneier).
 <br>

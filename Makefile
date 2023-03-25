@@ -7,6 +7,12 @@ objets= $(sources:.c=.o)
 main: main.c paillierCles.c paillierDecryptage.c paillierEncryptage.c paillierParametre.c base.c
 	$(CC) $^ -o $@ -lm -lgmp
 
+client: client.c
+	$(CC) $^ -o $@ -lm -lgmp
+
+server: server.c
+	$(CC) $^ -o $@ -lm -lgmp
+
 test: $(objets)
 	$(CC) -o $@ $^ -lm -lgmp
 
