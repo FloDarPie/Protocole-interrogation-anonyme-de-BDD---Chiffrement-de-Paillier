@@ -4,13 +4,10 @@ CFLAGS= -Wall  # options de compilation pour les sources C
 sources= test_paillier.c paillierCles.c paillierDecryptage.c paillierEncryptage.c paillierParametre.c base.c
 objets= $(sources:.c=.o)
 
-main: main.c paillierCles.c paillierDecryptage.c paillierEncryptage.c paillierParametre.c base.c
+client: client.c helper.c
 	$(CC) $^ -o $@ -lm -lgmp
 
-client: client.c
-	$(CC) $^ -o $@ -lm -lgmp
-
-server: server.c
+server: server.c helper.c
 	$(CC) $^ -o $@ -lm -lgmp
 
 test: $(objets)

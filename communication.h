@@ -4,9 +4,9 @@
 
 
 
-void genererTab(mpz_t *tableau, int dim);
+void genererTab(int *tableau, int dim);
 
-void tabrequete(mpz_t *tab, int dim, int cell);
+void tabrequete(int *tab, int dim, int cell);
 
 void requetechiff(mpz_t *tab,int dim, paillier_pubkey *pubkey);
 

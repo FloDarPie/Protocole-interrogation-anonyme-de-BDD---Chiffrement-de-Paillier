@@ -1,28 +1,28 @@
 #include "communication.h"
 
 
-void genererTab(mpz_t *tableau, int dim)
+void genererTab(int *tableau, int dim)
 {
 
-    tableau = (mpz_t *)malloc(dim * sizeof(mpz_t));
+    tableau = (int *)malloc(dim * sizeof(int));
     for (int i; i < dim; i++)
     {
-        mpz_set_ui(tableau[i], i);
+        tableau[i]= i;
     }
 }
 
-void tabrequete(mpz_t *tab, int dim, int cell)
+void tabrequete(int *tab, int dim, int cell)
 {
-    tab = (mpz_t *)malloc(dim * sizeof(mpz_t));
+    tab = (int *)malloc(dim * sizeof(int));
     for (int i; i < dim; i++)
     {
         if (i == cell)
         {
-            mpz_set_ui(tab[i], 1);
+            tab[i]= 1;
         }
         else
         {
-            mpz_set_ui(tab[i], 0);
+            tab[i]= 0;
         }
     }
 }
