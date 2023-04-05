@@ -80,15 +80,15 @@ int connection(char* hostname, char* port){
 }
 
 // read server response
-void reader(void* var){
+void reader(int* var){
   char buf[MAXLINE];
   rio_t rio;
   int status;
-  int connID=(int)var;
+  int connID= *var;
   // initialise rio data structure
   rio_readinitb(&rio, connID);
   while(1){
-     while((status=rio_readlineb(&rio,buf,MAXLINE)) >0){
+     while((status=rio_readlineb(&rio,buf,MAXLINE)) >=0){
           //error
           if(status == -1)
             exit(1);
@@ -173,7 +173,7 @@ int main(int argc, char **argv){
     }
 
     // a thread for reading server response
-    pthread_create(&tid,NULL,reader, (void*)connID);
+    pthread_create(&tid,NULL,(void*) reader, &connID);
     // print the Chatroom prompt
     printf("%s",prompt);
     while(1){

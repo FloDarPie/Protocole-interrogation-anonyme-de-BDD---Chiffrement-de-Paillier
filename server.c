@@ -28,6 +28,8 @@ struct client{
 
 struct client *header=NULL;
 
+int* database = NULL;
+
 //**********************************************************************************
 
 /*
@@ -318,12 +320,15 @@ void* server_handler(void *arg) {
             // process the input
             buffer[n-1] = '\0'; // replace the newline character with a null terminator
             printf("log: server command - %s\n", buffer);
-        
+        }
+        //to close the server
         if (strcmp(buffer, "quit") == 0) {
                 printf("log: server is shutting down...\n");
 
                 //close the server
                 if(header==NULL){
+                  libererTab(database);
+                  printf("log: server closed.\n");
                   close(clientlen);
                   exit(0);
                 }
@@ -333,18 +338,45 @@ void* server_handler(void *arg) {
                 // close all connections
                 while(header!=NULL){
                   evaluate("quit",header->confd,header->name);
-                  header=header->next;
                 }
 
                 // exit the program
-                printf("fin ?\n");
+                libererTab(database);
+                printf("log: server closed.\n");
                 close(clientlen);
-                printf("fin !\n");
                 exit(0);
-            }
+        }
 
+        //to active the database
+        if (strncmp(buffer, "tableau", strlen("tableau")) == 0) {
+            // extract the arguments from the buffer
+            int size, dimension;
+            int res = sscanf(buffer, "tableau %d %d", &size, &dimension);
+            if (res != 2)
+            {
+                printf("log: Command Error: invalid arguments\n");
+            } else if (size <= 0 || dimension <= 0) 
+            {
+                printf("log: Command Error: invalid size or dimension\n");
+            } else 
+            {
+                // allocate the array
+                genererTab(database, size, dimension);
+            }
+          }
+
+          //liberate database
+          if (strcmp(buffer, "liberer") == 0) {
+            libererTab(database);
+          }
+        
+
+
+        if (strcmp(buffer, ""))
+        {
             // TODO: process the server command here
         }
+          
     }
 }
 
