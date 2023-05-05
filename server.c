@@ -23,12 +23,13 @@ struct client{
     char *name;
     int confd;
     struct client *next;
-	  struct paillier_pubkey *client_pubkey; // ajout de la structure de cle publique.
+	  struct paillier_pubkey *pubkey; // ajout de la structure de cle publique.
 };
 
 struct client *header=NULL;
 
 int* database = NULL;
+int eteint = 0;
 
 //**********************************************************************************
 
@@ -48,6 +49,16 @@ void add_user(struct client *user){
 
       header=user;
    }
+  // get current time
+  time_t current_time;
+  char* time_string;
+  current_time = time(NULL);
+  time_string = ctime(&current_time);
+    
+  // remove newline character from time string
+  time_string[strlen(time_string) - 1] = '\0';
+    
+  printf("log : A new client \"%s\" is connected - %s\n", user->name, time_string);
 }
 /*
  * @brief-: delete client from thr global list
@@ -69,7 +80,7 @@ void delete_user(int confd){
      previous->next=user->next;
 
    // free the resources
-    printf("log : client %s disconnected\n", user->name);
+    printf("log : client \"%s\" is disconnected\n", user->name);
    free(user->name);
    free(user);
 
@@ -148,23 +159,24 @@ void send_msg(int confd,char* msg, char* receiver, char* sender){
     if(receiver == NULL)
      while (user != NULL){
       if (user->confd == confd){
-         strcpy(response,"msg sent\n\r\n");
-         rio_writen(user->confd,response,strlen(response));
+          strcpy(response,"msg sent\n\r\n");
+          rio_writen(user->confd,response,strlen(response));
        }
 
       else{
-         sprintf(response,"start\n%s:%s\n\r\n",sender,msg);
-         rio_writen(user->confd,response,strlen(response));
+          sprintf(response,"start\n%s : %s\n\r\n",sender,msg);
+          rio_writen(user->confd,response,strlen(response));
       }
       user=user->next;
     }
    else{
        while (user != NULL){
          if(!strcmp(user->name,receiver)){
-           sprintf(response,"start\n%s:%s\n\r\n",sender,msg);
-           rio_writen(user->confd,response,strlen(response));
-           strcpy(response,"msg sent\n\r\n");
-           rio_writen(confd,response,strlen(response));
+            sprintf(response,"start\n%s : %s\n\r\n",sender,msg);
+            rio_writen(user->confd,response,strlen(response));
+            strcpy(response,"msg sent\n\r\n");
+            rio_writen(user->confd,response,strlen(response));
+
            return;
          }
          user=user->next;
@@ -190,56 +202,88 @@ void evaluate(char *buf ,int confd ,char *username){
 
 
   if(!strcmp(buf,"help")){
-        sprintf(response,"msg \"text\" : send the msg to all the clients online\n");
-        sprintf(response,"%smsg \"text\" user :send the msg to a particular client\n",response);
-        sprintf(response,"%sonline : get the username of all the clients online\n",response);
-        sprintf(response,"%squit : exit the chatroom\n\r\n",response);
-        rio_writen(confd,response,strlen(response));
-        return;
-   }
-   // get the online user name
-   if (!strcmp(buf,"online")){
-        // empty the buffer
-        response[0]='\0';
-        //global access should be exclusive
-        pthread_mutex_lock(&mutex);
-        while(user!=NULL){
-			sprintf(response,"%s%s\n",response,user->name);
-			user=user->next;
-        }
-		sprintf(response,"%s\r\n",response);
-		//global access should be exclusive
-		pthread_mutex_unlock(&mutex);
-		rio_writen(confd,response,strlen(response));
-		return;
+      sprintf(response,"msg \"text\" : send the msg to all the clients online.\n");
+      sprintf(response,"%smsg \"text\" user :send the msg to a particular client.\n",response);
+      sprintf(response,"%s/a text : send to all client.\n",response);
+      sprintf(response,"%sonline : get the username of all the clients online.\n",response);
+      sprintf(response,"%skeys : generate all the keys for Paillier encryption communication.\n",response);
+      sprintf(response,"%squit : exit the chatroom.\n\r\n",response);
+      rio_writen(confd,response,strlen(response));
+      return;
    }
 
-   if (!strcmp(buf,"quit")){
+   // get the online user name
+   if (!strcmp(buf,"online")){
+      // empty the buffer
+      response[0]='\0';
+      //global access should be exclusive
+      pthread_mutex_lock(&mutex);
+      while(user!=NULL){
+          sprintf(response,"%s%s\n",response,user->name);
+          user=user->next;
+      }
+      sprintf(response,"%s\r\n",response);
+      //global access should be exclusive
+      pthread_mutex_unlock(&mutex);
+      rio_writen(confd,response,strlen(response));
+      return;
+   }
+/*
+  //set keys
+  if (!strcmp(buf,"keys")){
+      response[0]='\0';
+      strcpy(response,"keys\n\r\n");
+      rio_writen(confd,response,strlen(response));
+      return;
+   }
+*/
+  //close the connexion
+  if (!strcmp(buf,"quit")){
       pthread_mutex_lock(&mutex);
       delete_user(confd);
       pthread_mutex_unlock(&mutex);
       strcpy(response,"exit");
       rio_writen(confd,response,strlen(response));
       close(confd);
+      eteint++;
       return;
-
    }
 
-   sscanf(buf,"%s \" %[^\"] \"%s",keyword,msg,receiver);
-
-   if (!strcmp(keyword,"msg")){
-
+  //send to all
+  if (!strncmp(buf, "/a", strlen("/a")) == 0) {
+        sscanf(buf,"%s %[^\"]",keyword,msg);
         pthread_mutex_lock(&mutex);
-        send_msg(confd,msg,receiver,username);
+        struct client *receiver=header;
+        while(receiver!=NULL){
+          send_msg(confd,msg,receiver->name,username);
+          receiver = receiver->next;
+        }
+        free(receiver);
         pthread_mutex_unlock(&mutex);
+    return;
    }
+
+
+  //send to specific
+  sscanf(buf,"%s \" %[^\"] \"%s",keyword,msg,receiver);
+   if (!strcmp(keyword,"msg")){
+      pthread_mutex_lock(&mutex);
+      send_msg(confd,msg,receiver,username);
+      pthread_mutex_unlock(&mutex);
+      return;
+  }
+  
+  //error
   else {
-     strcpy(response,"Invalid command\n\r\n");
+     strcpy(response," - Invalid command\n\r\n");
      rio_writen(confd,response,strlen(response));
 
   }
 
+  return;
 }
+
+
 /*
 * @brief-: the function handles incoming clients concurrently
 * @vargp-: poiner to the connection file descriptor
@@ -307,10 +351,19 @@ void* client_handler(void *vargp ){
 * manage the uses of command on the server
 *
 */
+void usage_server(){
+  printf(" > h           : print help\n");
+  printf(" > quit        : close all conections and the server\n");
+  printf(" > tableau X Y : set the database to size X with dimension Y\n");
+  printf(" > liberer     : free the allocated memory of the database\n");
+}
+
+
 void* server_handler(void *arg) {
     socklen_t clientlen = *(socklen_t*)arg;
     char buffer[BUFSIZ];
     int n;
+
 
     while(1) {
         // read from stdin
@@ -321,6 +374,7 @@ void* server_handler(void *arg) {
             buffer[n-1] = '\0'; // replace the newline character with a null terminator
             printf("log: server command - %s\n", buffer);
         }
+
         //to close the server
         if (strcmp(buffer, "quit") == 0) {
                 printf("log: server is shutting down...\n");
@@ -365,13 +419,37 @@ void* server_handler(void *arg) {
             }
           }
 
-          //liberate database
-          if (strcmp(buffer, "liberer") == 0) {
-            libererTab(database);
-          }
+        //liberate database
+        if (strcmp(buffer, "liberer") == 0) {
+          libererTab(database);
+        }
         
+        //print help
+        if (strcmp(buffer, "h") == 0) {
+          usage_server();
+        }
+/*
+        //print public keys
+        if (strcmp(buffer, "publicKeys") == 0) {
+          printf("log: Display public keys\n");
+          pthread_mutex_lock(&mutex);
+          struct client *receiver=header;
+          while(receiver!=NULL){
+            printf("-----------------------\n");
+            printf("%c :\n", receiver->name);
+            gmp_printf("N : %Zd", receiver->pubkey->n);
+            gmp_printf("N^2 : %Zd", receiver->pubkey->n2);
+            printf("-----------------------\n");
+            receiver = receiver->next;
+          }
+          free(receiver);
+          pthread_mutex_unlock(&mutex);
+        }
+*/        
 
 
+        
+        
         if (strcmp(buffer, ""))
         {
             // TODO: process the server command here
@@ -402,8 +480,9 @@ int main(int argc,char **argv){
    printf("connection failed\n");
    exit(1);
   }
-
-  printf("log: waiting at localhost and port '%s' \n",port);
+  usage_server();
+  printf("#######################################\n");
+  printf("log: waiting at localhost and port '%s'\n",port);
 
 
   //set up the server to be able to be used
@@ -413,25 +492,11 @@ int main(int argc,char **argv){
 
 
   // loop to keep accepting clients
-  while(1){
-    // get current time
-    time_t current_time;
-    char* time_string;
-    current_time = time(NULL);
-    time_string = ctime(&current_time);
-    
-    // remove newline character from time string
-    time_string[strlen(time_string) - 1] = '\0';
-
-
+  while(!eteint){
     // assign space in the heap [prevents data race]
     confd=malloc(sizeof(int));
     *confd=accept(listen, (struct sockaddr *)&clientaddr, &clientlen);
-  
-    // create message to display
-    printf("log: A new client is online - %s\n", time_string);
     
-
     // assign a seperate thread to deal with the new client
     pthread_create(&tid_client,NULL,client_handler, confd);
 

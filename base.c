@@ -17,13 +17,15 @@ void genererTab(int *tableau, int n, int dim)
         for(int i = 0; i<n; i++)
             tableau[i]= i;
     }
-    printf("log: Created array of size %d and dimension %d\n", n, dim);
+    printf("log: Current database set to size %d and dimension %d.\n", n, dim);
 }
 
 void libererTab(int *tableau)
 {
     free(tableau);
-    printf("log: Current array of size %d and dimension %d erased\n", longueur, profondeur);
+    printf("log: Current database of size %d and dimension %d erased.\n", longueur, profondeur);
+    longueur = 0;
+    profondeur = 0;
 }
 
 /*
