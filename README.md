@@ -20,23 +20,19 @@ Voici le protocole d'implémentation :
    a. Soit c le chiffré à déchiffrer<br>
    b. Calculer le déchiffré m = (c^(lambda) mod n^2 - 1) / n * mu mod n
 
-Objectifs :
 
-Construire un tableau très grand.
-Établir une communication entre un client et un serveur.
-Communication chiffré.
-Il faut pouvoir effectuer une requête sans que le serveur puisse l'identifier.
+Execution du test_paillier :<br>
+compilation  : gcc paillierDecryptage.c paillierEncryptage.c paillierParametre.c paillierCles.c test_paillier.c -o test -lgmp<br>
+execution : ./test <br>
 
-m_clair => m_chiffré ==========> 
-   CLIENT                           SERVEUR
+Execution des protocole :<br>
+compilation : gcc affichage.c paillierDecryptage.c paillierEncryptage.c paillierParametre.c paillierCles.c protocole.c -o protocole -lgmp<br>
+
+execution : exemple ./protocole 10 2 3 0  lance le protocole 1 avec un tableau de taille 10 de dimmension 2 avec comme case 3 <br>
+
+argument 1 :taille du tableau <br>
+argument 2 :dimmension du tableau <br>
+argument 3 :la case à chercher <br>
+argument 4 :protocole utilisé<br>
 
 
-
-stocké n2 plutôt que g dans la clé publique
-
-
-
-Source : 
- - https://www.sciencedirect.com/topics/computer-science/paillier-cryptosystem (pour les images)
-
- - https://www.theses.fr/2017GREAT092.pdf

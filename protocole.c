@@ -174,17 +174,17 @@ int main(int argc, char *argv[])
     for(int i =0; i < taille_tableau-1; i=i+2){
 
         mpz_set_ui(m_cpt,1);
-        mpz_set_ui(m_clair_1, vecteur[i]);                                  //init case
+        mpz_set_ui(m_clair_1, vecteur[i]);                                 
         chiffrer(&pubkey, m_clair_1, m_chiffre_1);
 
-        mpz_set_ui(m_clair_2, vecteur[i+1]);                                    //init case
+        mpz_set_ui(m_clair_2, vecteur[i+1]);                                    
         chiffrer(&pubkey, m_clair_2, m_chiffre_2);
                         
         mpz_set_ui(m_puissance_1, tableau[i]);
-        mpz_set_ui(m_puissance_2, tableau[i+1]);
+        mpz_set_ui(m_puissance_2, tableau[i+1]);                      
 
 
-        exponentiation_rapide2_2(m_cpt,m_puissance_1,m_puissance_2,m_chiffre_1,m_chiffre_2);                                   //puissance case
+        exponentiation_rapide2_2(m_cpt,m_puissance_1,m_puissance_2,m_chiffre_1,m_chiffre_2);                                  
        
         mpz_mul(m_total,m_total,m_cpt);
         mpz_mod(m_total, m_total, pubkey.n2);
@@ -194,12 +194,11 @@ int main(int argc, char *argv[])
         printf("%f s.\n", time_protocole);
         protocole3_encoursDeb = clock();
     }
-    if(taille_tableau%2!=0){
+    if(taille_tableau%2!=0){                         // les cas ou on a un tableau de taille impaire 
         mpz_set_ui(m_cpt,1);
-        mpz_set_ui(m_clair_1, vecteur[i]);                                  //init case
-        chiffrer(&pubkey, m_clair_1, m_chiffre_1);
+        mpz_set_ui(m_clair_1, vecteur[i]);                                  
 
-        mpz_set_ui(m_chiffre_2, 1);                                    //init case
+        mpz_set_ui(m_chiffre_2, 1);                                    
                         
         mpz_set_ui(m_puissance_1, tableau[taille_tableau-1]);
 
@@ -207,7 +206,8 @@ int main(int argc, char *argv[])
         mpz_mul(m_total,m_total,m_cpt);
         mpz_mod(m_total, m_total, pubkey.n2);
     }
-    dechiffrer(&pubkey, &privkey, m_total, m_clair_1); //dechiffre
+    dechiffrer(&pubkey, &privkey, m_total, m_clair_1); 
+
     gmp_printf("\nMessage clair   : %Zd", m_clair_1);
 
     protocole3_encours = clock();

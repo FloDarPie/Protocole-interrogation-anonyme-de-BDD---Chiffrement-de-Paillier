@@ -86,7 +86,7 @@ void exponentiation_rapide2_2(mpz_t A , mpz_t e,mpz_t f, mpz_t g,mpz_t h){
      }
 
 
-void exponentiation_rapide(mpz_t A , mpz_t * T,int * N,int n){
+void exponentiation_rapide(mpz_t A , mpz_t * T,int * N,int n){   // non fonctionnelle 
     int size = 128;
      int tab[n][size];
      int count;
