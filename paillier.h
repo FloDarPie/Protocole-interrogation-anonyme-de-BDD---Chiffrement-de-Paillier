@@ -6,6 +6,7 @@
 #include <gmp.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 
 //Memorisation des cles
