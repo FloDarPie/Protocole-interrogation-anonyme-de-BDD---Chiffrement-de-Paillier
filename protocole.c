@@ -131,9 +131,12 @@ int main(int argc, char *argv[])
     clock_t protocole2_encoursDeb = clock();
     clock_t protocole2_encours = clock();
     double time_protocole2 = 0.0;
+
+    int *tabtelechareger = (int *) malloc(taille_tableau * sizeof(int));
+
     for(int i =0; i < taille_tableau; i++){
         printf("-");
-        vecteur[i] = tableau[i];
+        tabtelechareger[i] = tableau[i];
         protocole2_encours = clock();                                           //temps
         time_protocole2 += (double)(protocole2_encours - protocole2_encoursDeb) / CLOCKS_PER_SEC;
         printf("%f s.\n", time_protocole2);
@@ -146,63 +149,122 @@ int main(int argc, char *argv[])
     }
 
 
-    //=========== PROTOCOLE 3 - Exponentiation rapide 
-     if(protocole==2){
 
-        clock_t protocole3_encoursDeb = clock();
-        clock_t protocole3_encours = clock();
-        double time_protocole = 0.0;
-
-        mpz_t e;
-        mpz_init_set_ui(e, 17);
-        int bit_array_e[64];
-
-        mpz_t f;
-        mpz_init_set_ui(f, 9);
-        int bit_array_f[64];
-
-        int size_e = sizeof(bit_array_e) / sizeof(int);
-        int size_f = sizeof(bit_array_f) / sizeof(int);
-
-        int size =  size_e > size_f ? size_e : size_f;
+    //=========== PROTOCOLE 3 - Exponentiation rapide 2 à 2
 
 
-        int count_e = mpz_to_bit_array(e, bit_array_e, size);
-        int count_f = mpz_to_bit_array(f, bit_array_f, size);
-
-        int count =  count_e < count_f ? count_e : count_f;
 
 
-        printf(" count = %d\n",count);
-        printf(" size = %d\n",size);
+ if(protocole==2){
+    mpz_t m_clair_1, m_clair_2,m_chiffre_1, m_chiffre_2, m_puissance_1, m_puissance_2, m_total,m_cpt;
+    mpz_init(m_clair_1);
+    mpz_init(m_clair_2);
+    mpz_init(m_chiffre_1);
+    mpz_init(m_chiffre_2);
+    mpz_init(m_puissance_1);
+    mpz_init(m_puissance_2);
+    mpz_init(m_total);
+    mpz_set_ui(m_total,1);
+    mpz_init(m_cpt);
 
-        display_tab(bit_array_e,size);
-        display_tab(bit_array_f,size);
+    clock_t protocole3_encoursDeb = clock();
+    clock_t protocole3_encours = clock();
+    double time_protocole = 0.0;
+    
+    for(int i =0; i < taille_tableau-1; i=i+2){
 
-        mpz_t A;
-        mpz_init_set_str(A, "1", 10);
+        mpz_set_ui(m_cpt,1);
+        mpz_set_ui(m_clair_1, vecteur[i]);                                  //init case
+        chiffrer(&pubkey, m_clair_1, m_chiffre_1);
+
+        mpz_set_ui(m_clair_2, vecteur[i+1]);                                    //init case
+        chiffrer(&pubkey, m_clair_2, m_chiffre_2);
+                        
+        mpz_set_ui(m_puissance_1, tableau[i]);
+        mpz_set_ui(m_puissance_2, tableau[i+1]);
+
+
+        exponentiation_rapide2_2(m_cpt,m_puissance_1,m_puissance_2,m_chiffre_1,m_chiffre_2);                                   //puissance case
+       
+        mpz_mul(m_total,m_total,m_cpt);
+        mpz_mod(m_total, m_total, pubkey.n2);
         
-        mpz_t g;
-        mpz_init_set_str(g, "2", 10);
-        mpz_t h;
-        mpz_init_set_str(h, "3", 10);
+        protocole3_encours = clock();                                           //temps
+        time_protocole += (double)(protocole3_encours - protocole3_encoursDeb) / CLOCKS_PER_SEC;
+        printf("%f s.\n", time_protocole);
+        protocole3_encoursDeb = clock();
+    }
+    if(taille_tableau%2!=0){
+        mpz_set_ui(m_cpt,1);
+        mpz_set_ui(m_clair_1, vecteur[i]);                                  //init case
+        chiffrer(&pubkey, m_clair_1, m_chiffre_1);
 
-        for(int i = count; i<=size-1; i++){
-            
-           
-            mpz_mul(A,A,A);
-            if(bit_array_e[i]==1){
-               
-                mpz_mul(A,A,g);
-            }
-            if(bit_array_f[i]==1){
-               mpz_mul(A,A,h);
-            }
-        }
-        gmp_printf("\n A=   : %Zd", A);
+        mpz_set_ui(m_chiffre_2, 1);                                    //init case
+                        
+        mpz_set_ui(m_puissance_1, tableau[taille_tableau-1]);
+
+        exponentiation_rapide2_2(m_cpt,m_puissance_1,m_puissance_2,m_chiffre_1,m_chiffre_2);
+        mpz_mul(m_total,m_total,m_cpt);
+        mpz_mod(m_total, m_total, pubkey.n2);
+    }
+    dechiffrer(&pubkey, &privkey, m_total, m_clair_1); //dechiffre
+    gmp_printf("\nMessage clair   : %Zd", m_clair_1);
+
+    protocole3_encours = clock();
+    time_spent += (double)(protocole3_encours - balise1) / CLOCKS_PER_SEC;
+
+    printf("\nTemps total protocole : %f s.",time_spent);
+   
+   
+    mpz_clear(m_total);
+    mpz_clear(m_clair_1);
+    mpz_clear(m_clair_2);
+    mpz_clear(m_puissance_1);
+    mpz_clear(m_puissance_2);
+    mpz_clear(m_chiffre_1);
+    mpz_clear(m_chiffre_2);
+    mpz_clear(m_cpt);
+ }
 
 
-     }
+  //=========== PROTOCOLE 4 - Exponentiation NON fonctionnelle 
+
+  if(protocole==3){
+    mpz_t m_cpt,m_clair,m_chiffre;
+  
+
+    clock_t protocole4_encoursDeb = clock();
+    clock_t protocole4_encours = clock();
+    double time_protocole = 0.0;
+    mpz_init(m_cpt);
+    mpz_set_ui(m_cpt,1);  
+    mpz_init(m_clair);
+    mpz_init(m_chiffre);
+    mpz_t tab[taille_tableau];
+      
+      
+      for(int i =0; i < taille_tableau; i++){
+        mpz_set_ui(m_clair,vecteur[i]);
+        
+        chiffrer(&pubkey, m_clair, m_chiffre);
+        mpz_init(tab[i]);
+        mpz_set(tab[i],m_chiffre); 
+      }
+
+
+  exponentiation_rapide(m_cpt,tab,tableau,taille_tableau);
+
+  dechiffrer(&pubkey, &privkey, m_cpt, m_cpt); 
+    gmp_printf("\nMessage clair   : %Zd", m_cpt);
+
+    protocole4_encours = clock();
+    time_spent += (double)(protocole4_encours - balise1) / CLOCKS_PER_SEC;
+
+    printf("\nTemps total protocole : %f s.",time_spent);
+    mpz_clear(m_cpt);
+
+  }
+
 
 
 
